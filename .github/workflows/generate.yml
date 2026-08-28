@@ -1,0 +1,40 @@
+name: Gerar site de achadinhos
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # todo dia as 09:00 UTC (06:00 horario de Brasilia)
+  workflow_dispatch: {}     # permite rodar manualmente pelo botao "Run workflow"
+  push:
+    branches: [main]
+    paths:
+      - "data/products.csv"
+      - "config.json"
+      - "templates/**"
+      - "generator.py"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Gerar site
+        run: python generator.py
+
+      - name: Publicar mudancas
+        run: |
+          git config user.name "achadinhos-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs data/ml_ideas.json
+          git diff --staged --quiet || git commit -m "Atualiza site automaticamente [skip ci]"
+          git push

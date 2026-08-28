@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid">
+  {% for p in products %}
+  <div class="card">
+    <a href="{{ p.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener">
+      <img src="{{ p.image_url }}" alt="{{ p.title }}" loading="lazy">
+    </a>
+    <div class="body">
+      <h3>{{ p.title }}</h3>
+      <div class="price">R$ {{ p.price }}</div>
+      <p>{{ p.description }}</p>
+      <a class="btn" href="{{ p.affiliate_link }}" target="_blank" rel="nofollow sponsored noopener">Ver oferta</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
